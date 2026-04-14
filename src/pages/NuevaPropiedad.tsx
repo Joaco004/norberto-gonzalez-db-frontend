@@ -2,4 +2,4 @@ const NuevaPropiedadPage = () => {
   return <div />
 }
 
-export default NuevaPropiedadPage
+export default NuevaPropiedadPage;
