@@ -2,4 +2,4 @@ const EditarPropiedadPage = () => {
   return <div />
 }
 
-export default EditarPropiedadPage
+export default EditarPropiedadPage;
