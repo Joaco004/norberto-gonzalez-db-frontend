@@ -116,7 +116,7 @@ const ContactosPage = () => {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                                             <p style={{ fontWeight: 500, fontSize: '15px' }}>{c.nombre}</p>
                                             {!c.leido && (
-                                                <span style={{ fontSize: '11px', backgroundColor: '#1a1a2e', color: 'white', borderRadius: '20px', padding: '2px 8px' }}>
+                                                <span style={{ fontSize: '11px', backgroundColor: '#1dc909', color: 'white', borderRadius: '20px', padding: '2px 8px' }}>
                                                     Nuevo
                                                 </span>
                                             )}

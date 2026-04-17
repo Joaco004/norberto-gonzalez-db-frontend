@@ -45,6 +45,12 @@ const Sidebar = () => {
                 >
                     Propiedades
                 </NavLink>
+                <NavLink 
+                to="/contactos"
+                style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
+                >
+                    Contactos
+                </NavLink>
 
                 {usuario?.esAdmin && (
                     <>
