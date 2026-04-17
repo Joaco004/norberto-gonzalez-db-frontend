@@ -7,6 +7,8 @@ import EditarPropiedadPage from './pages/EditarPropiedad'
 import PropiedadDetallePage from './pages/PropiedadDetallePage'
 import AppLayout from './components/layout/AppLayout'
 import RutaProtegida from './components/layout/RutaProtegida'
+import VendedoresPage from './pages/VendedoresPage'
+import HistorialPage from './pages/HistorialPage'
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
           <Route path="/propiedades/nueva" element={<NuevaPropiedadPage />} />
           <Route path="/propiedades/:id" element={<PropiedadDetallePage />} />
           <Route path="/propiedades/:id/editar" element={<EditarPropiedadPage />} />
+          <Route path="/vendedores" element={<VendedoresPage />} />
+          <Route path="/historial" element={<HistorialPage />} />
         </Route>
       </Route>
 
