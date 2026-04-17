@@ -188,7 +188,6 @@ const EditarPropiedadPage = () => {
           <div style={fieldStyle}>
             <label style={labelStyle}>Zona *</label>
             <select name="zona" value={form.zona} onChange={handleChange} required style={inputStyle}>
-              <option value="">Seleccioná una zona</option>
               {zonas.map(z => (
                 <option key={z._id} value={z._id}>{z.nombre}</option>
               ))}
