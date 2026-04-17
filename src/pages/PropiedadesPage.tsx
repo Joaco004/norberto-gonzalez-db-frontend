@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPropiedades } from "../api/propiedades";
+import { getZonas } from "../api/zonas";
+import type { IZona } from '../types/zona';
 
 const PropiedadesPage = () => {
   const [propiedades, setPropiedades] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
+  const [zonas, setZonas] = useState<IZona[]>([])
   const [filtros, setFiltros] = useState({
     tipo: '',
     operacion: '',
     estado: '',
     orderBy: '',
+    zona: '',
   })
+
   const navigate = useNavigate()
 
   const cargarPropiedades = async () => {
@@ -29,8 +34,17 @@ const PropiedadesPage = () => {
   }
 
   useEffect(() => {
+    const cargarZonas = async () => {
+      const data = await getZonas()
+      setZonas(data)
+    }
+    cargarZonas()
+  }, [])
+
+  useEffect(() => {
     cargarPropiedades()
   }, [filtros])
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
@@ -101,6 +115,17 @@ const PropiedadesPage = () => {
           <option value="antiguos">Más antiguos</option>
           <option value="precio_asc">Precio: menor a mayor</option>
           <option value="precio_desc">Precio: mayor a menor</option>
+        </select>
+
+        <select
+          value={filtros.zona}
+          onChange={e => setFiltros({ ...filtros, zona: e.target.value })}
+          style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' }}
+        >
+          <option value="">Todas las zonas</option>
+          {zonas.map(z => (
+            <option key={z._id} value={z._id}>{z.nombre}</option>
+          ))}
         </select>
       </div>
 
