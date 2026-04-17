@@ -10,6 +10,7 @@ import RutaProtegida from './components/layout/RutaProtegida'
 import VendedoresPage from './pages/VendedoresPage'
 import HistorialPage from './pages/HistorialPage'
 import ZonasPage from './pages/ZonasPage'
+import ContactosPage from './pages/ContactosPage'
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/vendedores" element={<VendedoresPage />} />
           <Route path="/historial" element={<HistorialPage />} />
           <Route path="/zonas" element={<ZonasPage />} />
+          <Route path="/contactos" element={<ContactosPage />} />
         </Route>
       </Route>
 
