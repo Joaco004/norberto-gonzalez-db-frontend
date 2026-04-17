@@ -9,6 +9,7 @@ import AppLayout from './components/layout/AppLayout'
 import RutaProtegida from './components/layout/RutaProtegida'
 import VendedoresPage from './pages/VendedoresPage'
 import HistorialPage from './pages/HistorialPage'
+import ZonasPage from './pages/ZonasPage'
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/propiedades/:id/editar" element={<EditarPropiedadPage />} />
           <Route path="/vendedores" element={<VendedoresPage />} />
           <Route path="/historial" element={<HistorialPage />} />
+          <Route path="/zonas" element={<ZonasPage />} />
         </Route>
       </Route>
 

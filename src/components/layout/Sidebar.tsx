@@ -54,6 +54,9 @@ const Sidebar = () => {
                         >
                             Vendedores
                         </NavLink>
+                        <NavLink to="/zonas" style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}>
+                            Zonas
+                        </NavLink>
                         <NavLink
                             to="/historial"
                             style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
