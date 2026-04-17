@@ -9,6 +9,7 @@ const PropiedadesPage = () => {
     tipo: '',
     operacion: '',
     estado: '',
+    orderBy: '',
   })
   const navigate = useNavigate()
 
@@ -20,9 +21,9 @@ const PropiedadesPage = () => {
       )
       const data = await getPropiedades(filtrosActivos)
       setPropiedades(data)
-    }catch (error) {
+    } catch (error) {
       console.error(error)
-    }finally {
+    } finally {
       setCargando(false)
     }
   }
@@ -89,6 +90,17 @@ const PropiedadesPage = () => {
           <option value="reservado">Reservado</option>
           <option value="vendido">Vendido</option>
           <option value="alquilado">Alquilado</option>
+        </select>
+
+        <select
+          value={filtros.orderBy}
+          onChange={e => setFiltros({ ...filtros, orderBy: e.target.value })}
+          style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' }}
+        >
+          <option value="">Más recientes</option>
+          <option value="antiguos">Más antiguos</option>
+          <option value="precio_asc">Precio: menor a mayor</option>
+          <option value="precio_desc">Precio: mayor a menor</option>
         </select>
       </div>
 
