@@ -8,8 +8,10 @@ client.interceptors.request.use((config) => {
     const auth = localStorage.getItem('auth')
 
     if (auth) {
-        const { token } = JSON.parse(auth)
-        config.headers.Authorization = `Bearer ${token}`
+        const { state } = JSON.parse(auth)
+        if (state?.token){
+            config.headers.Authorization = `Bearer ${state.token}`
+        }
     }
 
     return config
