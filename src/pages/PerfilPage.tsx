@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { cambiarPassword } from '../api/auth'
+import { useNavigate } from 'react-router-dom'
 
 const PerfilPage = () => {
   const usuario = useAuthStore(state => state.usuario)
+  const logout = useAuthStore(state => state.logout)
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     passwordActual: '',
     passwordNueva: '',
@@ -32,7 +35,11 @@ const PerfilPage = () => {
 
     try {
       await cambiarPassword(form.passwordActual, form.passwordNueva)
-      setExito('Contraseña actualizada correctamente')
+      setExito('Contraseña actualizada. Vas a ser redirigido al login...')
+      setTimeout(() => {
+        logout()
+        navigate('/login')
+      }, 2000)
       setForm({ passwordActual: '', passwordNueva: '', passwordConfirmar: '' })
     } catch (err) {
       setError('La contraseña actual es incorrecta')
