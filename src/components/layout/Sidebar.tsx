@@ -45,9 +45,9 @@ const Sidebar = () => {
                 >
                     Propiedades
                 </NavLink>
-                <NavLink 
-                to="/contactos"
-                style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
+                <NavLink
+                    to="/contactos"
+                    style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
                 >
                     Contactos
                 </NavLink>
@@ -68,6 +68,12 @@ const Sidebar = () => {
                             style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
                         >
                             Centro de registros
+                        </NavLink>
+                        <NavLink
+                            to="/perfil"
+                            style={({ isActive }) => isActive ? activeLinkStyle : linkStyle}
+                        >
+                            Mi perfil
                         </NavLink>
                     </>
                 )}

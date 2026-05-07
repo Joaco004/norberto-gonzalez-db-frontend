@@ -11,6 +11,7 @@ import VendedoresPage from './pages/VendedoresPage'
 import HistorialPage from './pages/HistorialPage'
 import ZonasPage from './pages/ZonasPage'
 import ContactosPage from './pages/ContactosPage'
+import PerfilPage from './pages/PerfilPage'
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/historial" element={<HistorialPage />} />
           <Route path="/zonas" element={<ZonasPage />} />
           <Route path="/contactos" element={<ContactosPage />} />
+          <Route path="/perfil" element={<PerfilPage />} />
         </Route>
       </Route>
 
