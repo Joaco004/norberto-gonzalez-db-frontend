@@ -24,3 +24,15 @@ export const eliminarPropiedad = async (id: string) => {
   const { data } = await client.delete(`/propiedades/${id}`)
   return data
 }
+
+export const subirFotos = async (id: string, fotos: FormData) => {
+  const { data } = await client.post(`/propiedades/${id}/fotos`, fotos, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return data
+}
+
+export const eliminarFoto = async (id: string, fotoId: string) => {
+  const { data } = await client.delete(`/propiedades/${id}/fotos/${fotoId}`)
+  return data
+}
