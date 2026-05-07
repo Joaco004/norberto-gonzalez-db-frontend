@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { crearPropiedad } from '../api/propiedades';
-import { getZonas } from '../api/zonas';
-import type { IZona } from '../types/zona';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { crearPropiedad } from '../api/propiedades'
+import { getZonas } from '../api/zonas'
+import type { IZona } from '../types/zona'
 
 const NuevaPropiedadPage = () => {
   const navigate = useNavigate()
   const [zonas, setZonas] = useState<IZona[]>([])
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
+  const [tipoPrincipal, setTipoPrincipal] = useState<'propiedad' | 'cochera' | null>(null)
   const [form, setForm] = useState({
     titulo: '',
     descripcion: '',
@@ -22,6 +23,7 @@ const NuevaPropiedadPage = () => {
     superficieTotal: '',
     superficieCubierta: '',
     cochera: false,
+    techada: false,
     antiguedad: '',
     estado: 'disponible',
     destacada: false,
@@ -55,6 +57,7 @@ const NuevaPropiedadPage = () => {
     try {
       const payload: Record<string, unknown> = {
         ...form,
+        tipo: tipoPrincipal === 'cochera' ? 'cochera' : form.tipo,
         precio: Number(form.precio),
         ambientes: form.ambientes ? Number(form.ambientes) : undefined,
         dormitorios: form.dormitorios ? Number(form.dormitorios) : undefined,
@@ -68,7 +71,7 @@ const NuevaPropiedadPage = () => {
       await crearPropiedad(payload as any)
       navigate('/propiedades')
     } catch (err) {
-      setError('Error al crear propiedad. Revisa los campos.')
+      setError('Error al crear la propiedad. Revisá los campos.')
     } finally {
       setCargando(false)
     }
@@ -83,27 +86,85 @@ const NuevaPropiedadPage = () => {
     boxSizing: 'border-box' as const,
   }
 
-  const labelStyle ={
+  const labelStyle = {
     display: 'block',
     fontSize: '13px',
     color: '#555',
     marginBottom: '6px',
   }
 
-  const fieldStyle = {
-    marginBottom: '16px',
+  const fieldStyle = { marginBottom: '16px' }
+
+  if (!tipoPrincipal) {
+    return (
+      <div style={{ maxWidth: '500px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+          <button
+            onClick={() => navigate('/propiedades')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: '14px' }}
+          >
+            ← Volver
+          </button>
+          <h1 style={{ fontSize: '22px', fontWeight: 500 }}>Nueva propiedad</h1>
+        </div>
+
+        <p style={{ color: '#555', fontSize: '15px', marginBottom: '24px' }}>¿Qué tipo de propiedad querés cargar?</p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div
+            onClick={() => setTipoPrincipal('propiedad')}
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '32px 24px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '2px solid #eee',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = '#1a1a2e')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = '#eee')}
+          >
+            <p style={{ fontSize: '40px', marginBottom: '12px' }}>🏠</p>
+            <p style={{ fontSize: '16px', fontWeight: 500 }}>Propiedad</p>
+            <p style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>Casa, depto, local, terreno, oficina</p>
+          </div>
+
+          <div
+            onClick={() => setTipoPrincipal('cochera')}
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '32px 24px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '2px solid #eee',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = '#1a1a2e')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = '#eee')}
+          >
+            <p style={{ fontSize: '40px', marginBottom: '12px' }}>🚗</p>
+            <p style={{ fontSize: '16px', fontWeight: 500 }}>Cochera</p>
+            <p style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>Techada o destechada</p>
+          </div>
+        </div>
+      </div>
+    )
   }
-  
+
   return (
     <div style={{ maxWidth: '700px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
         <button
-          onClick={() => navigate('/propiedades')}
+          onClick={() => setTipoPrincipal(null)}
           style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: '14px' }}
         >
           ← Volver
         </button>
-        <h1 style={{ fontSize: '22px', fontWeight: 500 }}>Nueva propiedad</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 500 }}>
+          {tipoPrincipal === 'cochera' ? 'Nueva cochera' : 'Nueva propiedad'}
+        </h1>
       </div>
 
       {error && (
@@ -119,17 +180,18 @@ const NuevaPropiedadPage = () => {
             <input name="titulo" value={form.titulo} onChange={handleChange} required style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Tipo *</label>
-            <select name="tipo" value={form.tipo} onChange={handleChange} style={inputStyle}>
-              <option value="casa">Casa</option>
-              <option value="departamento">Departamento</option>
-              <option value="local">Local</option>
-              <option value="terreno">Terreno</option>
-              <option value="oficina">Oficina</option>
-              <option value="cochera">Cochera</option>
-            </select>
-          </div>
+          {tipoPrincipal === 'propiedad' && (
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Tipo *</label>
+              <select name="tipo" value={form.tipo} onChange={handleChange} style={inputStyle}>
+                <option value="casa">Casa</option>
+                <option value="departamento">Departamento</option>
+                <option value="local">Local</option>
+                <option value="terreno">Terreno</option>
+                <option value="oficina">Oficina</option>
+              </select>
+            </div>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Operación *</label>
@@ -168,40 +230,48 @@ const NuevaPropiedadPage = () => {
             <input name="calle" value={form.calle} onChange={handleChange} style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ambientes</label>
-            <input name="ambientes" type="number" value={form.ambientes} onChange={handleChange} style={inputStyle} />
-          </div>
+          {tipoPrincipal === 'propiedad' && (
+            <>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Ambientes</label>
+                <input name="ambientes" type="number" value={form.ambientes} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Dormitorios</label>
-            <input name="dormitorios" type="number" value={form.dormitorios} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Dormitorios</label>
+                <input name="dormitorios" type="number" value={form.dormitorios} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Baños</label>
-            <input name="banos" type="number" value={form.banos} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Baños</label>
+                <input name="banos" type="number" value={form.banos} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Sup. total (m²)</label>
-            <input name="superficieTotal" type="number" value={form.superficieTotal} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Sup. total (m²)</label>
+                <input name="superficieTotal" type="number" value={form.superficieTotal} onChange={handleChange} style={inputStyle} />
+              </div>
+            </>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Sup. cubierta (m²)</label>
             <input name="superficieCubierta" type="number" value={form.superficieCubierta} onChange={handleChange} style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Antigüedad (años)</label>
-            <input name="antiguedad" type="number" value={form.antiguedad} onChange={handleChange} style={inputStyle} />
-          </div>
+          {tipoPrincipal === 'propiedad' && (
+            <>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Antigüedad (años)</label>
+                <input name="antiguedad" type="number" value={form.antiguedad} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ficha</label>
-            <input name="ficha" type="number" value={form.ficha} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Ficha</label>
+                <input name="ficha" type="number" value={form.ficha} onChange={handleChange} style={inputStyle} />
+              </div>
+            </>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Estado</label>
@@ -213,10 +283,19 @@ const NuevaPropiedadPage = () => {
             </select>
           </div>
 
-          <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <input name="cochera" type="checkbox" checked={form.cochera} onChange={handleChange} />
-            <label style={{ fontSize: '13px', color: '#555' }}>Tiene cochera</label>
-          </div>
+          {tipoPrincipal === 'cochera' && (
+            <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input name="techada" type="checkbox" checked={form.techada} onChange={handleChange} />
+              <label style={{ fontSize: '13px', color: '#555' }}>Techada</label>
+            </div>
+          )}
+
+          {tipoPrincipal === 'propiedad' && (
+            <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input name="cochera" type="checkbox" checked={form.cochera} onChange={handleChange} />
+              <label style={{ fontSize: '13px', color: '#555' }}>Tiene cochera</label>
+            </div>
+          )}
 
           <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
             <input name="destacada" type="checkbox" checked={form.destacada} onChange={handleChange} />
@@ -262,4 +341,4 @@ const NuevaPropiedadPage = () => {
   )
 }
 
-export default NuevaPropiedadPage;
+export default NuevaPropiedadPage
