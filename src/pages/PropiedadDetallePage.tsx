@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPropiedadById, eliminarPropiedad } from "../api/propiedades";
 import { useAuthStore } from "../store/authStore";
+import FotoUploader from '../components/propiedades/FotoUploader'
 
 const PropiedadDetallePage = () => {
   const { id } = useParams()
@@ -10,18 +11,19 @@ const PropiedadDetallePage = () => {
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
 
-  useEffect(() => {
-    const cargar = async () => {
-      try {
-        const data = await getPropiedadById(id!)
-        setPropiedad(data)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setCargando(false)
-      }
+  const cargarPropiedad = async () => {
+    try {
+      const data = await getPropiedadById(id!)
+      setPropiedad(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setCargando(false)
     }
-    cargar()
+  }
+
+  useEffect(() => {
+    cargarPropiedad()
   }, [id])
 
   const handleEliminar = async () => {
@@ -80,6 +82,15 @@ const PropiedadDetallePage = () => {
             </button>
           </div>
         )}
+      </div>
+
+      <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '24px', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '16px' }}>Fotos</h2>
+        <FotoUploader
+          propiedadId={id!}
+          fotos={propiedad.fotos}
+          onActualizar={cargarPropiedad}
+        />
       </div>
 
       <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '32px' }}>

@@ -149,3 +149,5 @@ const FotoUploader = ({ propiedadId, fotos, onActualizar }: Props) => {
         </div>
     )
 }
+
+export default FotoUploader;
