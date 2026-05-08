@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getPropiedadById, editarPropiedad } from '../api/propiedades';
-import { getZonas } from '../api/zonas';
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPropiedadById, editarPropiedad } from '../api/propiedades'
+import { getZonas } from '../api/zonas'
 import type { IZona } from '../types/zona'
 
 const EditarPropiedadPage = () => {
@@ -11,6 +11,7 @@ const EditarPropiedadPage = () => {
   const [cargando, setCargando] = useState(false)
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [error, setError] = useState('')
+  const [esCochera, setEsCochera] = useState(false)
   const [form, setForm] = useState({
     titulo: '',
     descripcion: '',
@@ -24,6 +25,7 @@ const EditarPropiedadPage = () => {
     superficieTotal: '',
     superficieCubierta: '',
     cochera: false,
+    techada: false,
     antiguedad: '',
     estado: 'disponible',
     destacada: false,
@@ -41,6 +43,7 @@ const EditarPropiedadPage = () => {
           getZonas(),
         ])
         setZonas(zonasData)
+        setEsCochera(propiedad.tipo === 'cochera')
         setForm({
           titulo: propiedad.titulo || '',
           descripcion: propiedad.descripcion || '',
@@ -54,6 +57,7 @@ const EditarPropiedadPage = () => {
           superficieTotal: propiedad.superficieTotal || '',
           superficieCubierta: propiedad.superficieCubierta || '',
           cochera: propiedad.cochera || false,
+          techada: propiedad.techada || false,
           antiguedad: propiedad.antiguedad || '',
           estado: propiedad.estado || 'disponible',
           destacada: propiedad.destacada || false,
@@ -135,7 +139,9 @@ const EditarPropiedadPage = () => {
         >
           ← Volver
         </button>
-        <h1 style={{ fontSize: '22px', fontWeight: 500 }}>Editar propiedad</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 500 }}>
+          {esCochera ? 'Editar cochera' : 'Editar propiedad'}
+        </h1>
       </div>
 
       {error && (
@@ -151,17 +157,18 @@ const EditarPropiedadPage = () => {
             <input name="titulo" value={form.titulo} onChange={handleChange} required style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Tipo *</label>
-            <select name="tipo" value={form.tipo} onChange={handleChange} style={inputStyle}>
-              <option value="casa">Casa</option>
-              <option value="departamento">Departamento</option>
-              <option value="local">Local</option>
-              <option value="terreno">Terreno</option>
-              <option value="oficina">Oficina</option>
-              <option value="cochera">Cochera</option>
-            </select>
-          </div>
+          {!esCochera && (
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Tipo *</label>
+              <select name="tipo" value={form.tipo} onChange={handleChange} style={inputStyle}>
+                <option value="casa">Casa</option>
+                <option value="departamento">Departamento</option>
+                <option value="local">Local</option>
+                <option value="terreno">Terreno</option>
+                <option value="oficina">Oficina</option>
+              </select>
+            </div>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Operación *</label>
@@ -199,40 +206,48 @@ const EditarPropiedadPage = () => {
             <input name="calle" value={form.calle} onChange={handleChange} style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ambientes</label>
-            <input name="ambientes" type="number" value={form.ambientes} onChange={handleChange} style={inputStyle} />
-          </div>
+          {!esCochera && (
+            <>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Ambientes</label>
+                <input name="ambientes" type="number" value={form.ambientes} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Dormitorios</label>
-            <input name="dormitorios" type="number" value={form.dormitorios} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Dormitorios</label>
+                <input name="dormitorios" type="number" value={form.dormitorios} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Baños</label>
-            <input name="banos" type="number" value={form.banos} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Baños</label>
+                <input name="banos" type="number" value={form.banos} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Sup. total (m²)</label>
-            <input name="superficieTotal" type="number" value={form.superficieTotal} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Sup. total (m²)</label>
+                <input name="superficieTotal" type="number" value={form.superficieTotal} onChange={handleChange} style={inputStyle} />
+              </div>
+            </>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Sup. cubierta (m²)</label>
             <input name="superficieCubierta" type="number" value={form.superficieCubierta} onChange={handleChange} style={inputStyle} />
           </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Antigüedad (años)</label>
-            <input name="antiguedad" type="number" value={form.antiguedad} onChange={handleChange} style={inputStyle} />
-          </div>
+          {!esCochera && (
+            <>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Antigüedad (años)</label>
+                <input name="antiguedad" type="number" value={form.antiguedad} onChange={handleChange} style={inputStyle} />
+              </div>
 
-          <div style={fieldStyle}>
-            <label style={labelStyle}>Ficha</label>
-            <input name="ficha" type="number" value={form.ficha} onChange={handleChange} style={inputStyle} />
-          </div>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Ficha</label>
+                <input name="ficha" type="number" value={form.ficha} onChange={handleChange} style={inputStyle} />
+              </div>
+            </>
+          )}
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Estado</label>
@@ -244,10 +259,19 @@ const EditarPropiedadPage = () => {
             </select>
           </div>
 
-          <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <input name="cochera" type="checkbox" checked={form.cochera} onChange={handleChange} />
-            <label style={{ fontSize: '13px', color: '#555' }}>Tiene cochera</label>
-          </div>
+          {esCochera && (
+            <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input name="techada" type="checkbox" checked={form.techada as boolean} onChange={handleChange} />
+              <label style={{ fontSize: '13px', color: '#555' }}>Techada</label>
+            </div>
+          )}
+
+          {!esCochera && (
+            <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input name="cochera" type="checkbox" checked={form.cochera} onChange={handleChange} />
+              <label style={{ fontSize: '13px', color: '#555' }}>Tiene cochera</label>
+            </div>
+          )}
 
           <div style={{ ...fieldStyle, display: 'flex', alignItems: 'center', gap: '8px' }}>
             <input name="destacada" type="checkbox" checked={form.destacada} onChange={handleChange} />
@@ -293,4 +317,4 @@ const EditarPropiedadPage = () => {
   )
 }
 
-export default EditarPropiedadPage;
+export default EditarPropiedadPage
